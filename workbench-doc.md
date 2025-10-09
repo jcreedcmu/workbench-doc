@@ -203,6 +203,60 @@ a full-featured version of the workbench experience.
 
 # Architecture Design
 
+## Text Editing Component
+
+We discuss here decisions about what core text editing component we plan to rely on.
+
+### Monaco
+
+[Monaco](https://github.com/microsoft/monaco-editor) is the text editing component developed for VSCode.
+It is what lean4web currently uses.
+
+**Advantages**
+
+- Actively developed, institutional support from Microsoft
+- Already extremely well tested in its use in lean4web
+- Extensive LSP support (document highlights, hovers, folding ranges,
+  semantic tokens, inlay hints, completions, diagnostics, signature
+  help, code actions, code formatting and extending the protocol with
+  custom fields, capabilities, requests and notifications. )
+- Lean-specific extensions already implemented in lean4web
+- Has [plugin support](https://github.com/yjs/y-monaco/) for collaborative editing
+  via a well-known javascript CRDT library.
+
+**Disadvantages**
+- Disclaims support for mobile, although in practice it's not clear what functionality is missing. We have a "backup" instance of codemirror in lean4web.
+- Doesn't allow inline DOM elements. [Although this PR](https://github.com/microsoft/vscode/pull/66418) has landed,
+there is no officially supported API for it, and it appears to have languished for years in this state.
+
+### Codemirror
+
+[Codemirror](https://github.com/codemirror/dev/) is another generally
+popular text editing component in the open-source ecosystem. For
+example, Jupyter uses it.
+
+The main reason for even considering it is that it does support
+injecting arbitrary DOM elements into the flow of code, (see [examples
+here](https://codemirror.net/examples/decoration/)) subject to some
+constraints to make vertical layout predictable.
+
+**Other advantages**
+
+- Deliberate support for mobile
+- Good accessibility story
+- Has first-party support for [collaborative editing](https://codemirror.net/examples/collab/)
+
+**Disadvantages**
+
+- Much less mature LSP support
+- Less actively developed, although has been developed since 2007; primarily solo dev
+
+
+### Decision
+
+We plan to stay with Monaco for the forseeable future, and try to find
+workarounds for mixing text and nontextual elements.
+
 ## Extensible Interactivity
 
 We want authors to be able to
