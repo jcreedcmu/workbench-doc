@@ -87,18 +87,19 @@ Examples of other language sandboxes include
 - Codepen: https://codepen.io/
 - Egglog: https://egraphs-good.github.io/egglog-demo/
 - p5: https://editor.p5js.org/
+- Github vscode wrapper: https://github.dev/github/dev
 
 # Goals
 
 ## Installation
 
-All features of the workbench should be usable without installing any
-software on their own computer other than a modern web browser. The
-workbench's primary interface is as a web application.
+All features of the workbench should be available to the user without
+installing any software on their own computer other than a modern web
+browser. The workbench's primary interface is as a web application.
 
-Institutional users will, however, need to install and
-maintain the server software that supports the workbench's interface.
-This installation process should be simple and reliable.
+Institutional users will, however, need to install and maintain the
+server software that supports the workbench's interface. This
+installation process should be simple and reliable.
 
 ## Identity
 
@@ -109,8 +110,8 @@ This notion should mostly rely on external identity providers, such as
 github, google, or a university's preferred SSO system. We should, as
 much as possible, avoid reinventing wheels in this design space.
 
-The workbench should support a significant fraction
-of its features being used *without* creating an account, to the
+The workbench should have a portion of its functionality available
+*without* creating an account, to the
 extent that it makes sense. The
 [live.lean-lang.org](https://live.lean-lang.org) service demonstrates
 that this mode of use is extraordinarily useful for sharing minimal
@@ -118,6 +119,9 @@ working examples, and testing out small ideas. We anticipate it being
 important for adoption that potential new users have a low-overhead
 way of reading (and perhaps modifying without saving) existing
 mathematical projects in the workbench.
+
+The onramp from this state to creating an account should be
+low-friction.
 
 ## Permissions
 
@@ -234,6 +238,34 @@ a full-featured version of the workbench experience.
 # Architecture Design
 
 TODO: put a mermaid diagram here
+
+## Interface Organization
+
+A central decision point is whether to present to the user what is
+fundamentally "VSCode on the web" (similar to https://vscode.dev/ or
+https://github.dev/ ) or something else. This question does not
+address whether we reuse the monaco text editing component (which is
+discussed below) or whether we intend to reuse a substantial amount of
+functionality from the Lean VSCode plugin, LSP client, etc. (which we
+intend to do). It is concerned with the user interface affordances
+that are outside the scope of a single file, for example:
+
+- file management: choosing files to edit, moving files around, modifying their attributes
+- selecting a project/workspace to work on
+- searching across an entire project
+
+### The case for "Basically VSCode"
+
+- More reuse, less time spent coding up file browser widgets
+
+### The case for Custom UX
+
+- More freedom to find solutions that make sense for specifically the online case,
+  such as affordinaces for collaborative editing, sharing, linking that may not
+  fit well in VCSode's current model.
+- More ability to design for domain-specific ways of focusing readers' attention.
+  This is especially relevant for inexperienced readers whom we want to avoid
+  overwhelming with advanced features.
 
 ## Text Editing Component
 
