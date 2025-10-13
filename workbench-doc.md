@@ -71,6 +71,23 @@ https://github.com/hanwenzhu/blueprint-gen
 
 https://github.com/hanwenzhu/blueprint-gen-example
 
+## Visual Design
+
+Examples of other language sandboxes include
+
+- Elm: https://ellie-app.com/new
+- Rocq: https://jscoq.github.io/scratchpad.html
+- Racket: https://onecompiler.com/racket
+- Typst: https://typst.app/play/
+- Twelf: https://twelf.org/twelf-wasm/
+- Dusa: https://dusa.rocks/
+- Compiler Explorer: https://godbolt.org/
+- GraphQL: https://studio.apollographql.com/sandbox/explorer/
+- JSFiddle: https://jsfiddle.net/
+- Codepen: https://codepen.io/
+- Egglog: https://egraphs-good.github.io/egglog-demo/
+- p5: https://editor.p5js.org/
+
 # Goals
 
 ## Installation
@@ -216,6 +233,8 @@ a full-featured version of the workbench experience.
 
 # Architecture Design
 
+TODO: put a mermaid diagram here
+
 ## Text Editing Component
 
 We discuss here decisions about what core text editing component we plan to rely on.
@@ -280,9 +299,9 @@ We assume some kind of Elm/React-like architecture. The author needs
 to express state update somehow. An important design decision is how
 they express state update. Alternatives include the following:
 
-One possibility we might imagine is to **write state update in lean, and it executes on server**.
+One possibility we might imagine is to **write state update in lean, and it executes on the server**.
 This is pretty much untenable. Latency would be too high.
-Another possibility is to ***write state update in javascript**.
+Another possibility is to **write state update in javascript**.
 This is what Widgets does today. The main downside is that this creates an adoption barrier: with lean and javascript
 there there are two languages to learn, two build systems to learn.
 
