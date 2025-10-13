@@ -118,12 +118,13 @@ documents probably shouldn't be world-writable.
 
 The workbench should support persistent storage of user content.
 
-The workbench's conception of "what a Lean project is" should be
-as close as possible to what it is when someone uses Lean normally on
-their own computer. It consists of a directory with a `lakefile.toml`
-or `lakefile.lean`, organized in directories that constitute modules,
-etc. We should aim to provide, when useful, alternate *presentations*
-of this data, and/or alternate ways to edit it.
+The workbench's conception of "what a Lean project is" should be as
+close as possible to what it is when someone uses Lean normally on
+their own computer. It is organized as directories and files. A
+project has a toplevel directory with a `lakefile.toml` or
+`lakefile.lean`, with subdirectories that constitute modules, etc. We
+should aim to provide, when useful, alternate *presentations* of this
+data, and/or alternate ways to edit it.
 
 To that point, the workbench should support editing of Lean
 projects that span multiple files.
@@ -141,7 +142,17 @@ this is through commandline tools, rather than through the web interface.
 The workbench should support integration with version control.
 
 The workbench should support multiple users being able to make changes
-to the same Lean project.
+to the same Lean project, including near-real-time editing of the same
+document.
+
+The workbench should support communicating
+[awareness](https://docs.yjs.dev/getting-started/adding-awareness)
+data: which collaborators are currently actively viewing the document,
+and which part of the document they are viewing or editing.
+
+The workbench should support exporting a project to a gzipped tar or
+zip archive. The workbench should support import of these archive
+formats, as well as git remotes.
 
 ## Document Authoring
 
@@ -165,14 +176,16 @@ Examples include but are not limited to:
 
 ## Security
 
-The workbench should prevent uncontrolled access to the underlying resources of the server.
+The workbench should prevent uncontrolled access to the underlying
+resources of the server. Because Lean can be used a general-purpose
+programming language, this requires sandboxing at the operating system
+level.
 
 ## Mobile
 
 It should be possible to *view* workbench content from a mobile device. It is not
 necessarily a goal that interactive features work the same way, nor is it a goal
 that the editing experience on mobile is at parity with a normal desktop browser.
-
 
 # Non-Goals
 
@@ -212,7 +225,7 @@ We discuss here decisions about what core text editing component we plan to rely
 [Monaco](https://github.com/microsoft/monaco-editor) is the text editing component developed for VSCode.
 It is what lean4web currently uses.
 
-**Advantages**
+**Pro**
 
 - Actively developed, institutional support from Microsoft
 - Already extremely well tested in its use in lean4web
@@ -224,7 +237,8 @@ It is what lean4web currently uses.
 - Has [plugin support](https://github.com/yjs/y-monaco/) for collaborative editing
   via a well-known javascript CRDT library.
 
-**Disadvantages**
+**Con**
+
 - Disclaims support for mobile, although in practice it's not clear what functionality is missing. We have a "backup" instance of codemirror in lean4web.
 - Doesn't allow inline DOM elements. [Although this PR](https://github.com/microsoft/vscode/pull/66418) has landed,
 there is no officially supported API for it, and it appears to have languished for years in this state.
@@ -240,17 +254,16 @@ injecting arbitrary DOM elements into the flow of code, (see [examples
 here](https://codemirror.net/examples/decoration/)) subject to some
 constraints to make vertical layout predictable.
 
-**Other advantages**
+**Pro**
 
 - Deliberate support for mobile
 - Good accessibility story
 - Has first-party support for [collaborative editing](https://codemirror.net/examples/collab/)
 
-**Disadvantages**
+**Con**
 
 - Much less mature LSP support
 - Less actively developed, although has been developed since 2007; primarily solo dev
-
 
 ### Decision
 
@@ -259,31 +272,70 @@ workarounds for mixing text and nontextual elements.
 
 ## Extensible Interactivity
 
-We want authors to be able to
-We assume some kind of Elm/React-like architecture. The author needs to express state update somehow.
+Authors should be able to create their own interactive visualizations
+of mathematical content. We want to draw as much inspiration and reuse
+from the existing Widgets framework as feasible.
 
-- Write state update in lean. It executes on server.
-  This is pretty much unworkable. Latency would be too high.
-- Write state update in javascript.
-  This is what Widgets does today. Downsides: two languages to learn, two build systems to learn.
-- Write state update in lean. It executes in the browser…
-  - …via compiling a special-purpose DSL.
-    This has some of the same disadvantages to writing in javascript, user has to learn other language
-    Advantage: could produce idiomatic javascript
-  - …via elaborating lean to Expr, and then custom compilation Expr to js
-Advantages: tree-shaking happens naturally. Idiomatic mapping of high-level operations to javascript operations.
-Disadvantages: Expr has tons of equality reasoning type of stuff (e.g. proof witnesses) in it that is proof-irrelevantly erased by IR time
-  - …via compiling lean to LLVM to wasm. (probably emscripten)
-  - …via compiling lean to C to wasm. (probably emscripten)
-  - …via compile lean to IR to wasm directly
+We assume some kind of Elm/React-like architecture. The author needs
+to express state update somehow. An important design decision is how
+they express state update. Alternatives include the following:
+
+One possibility we might imagine is to **write state update in lean, and it executes on server**.
+This is pretty much untenable. Latency would be too high.
+Another possibility is to ***write state update in javascript**.
+This is what Widgets does today. The main downside is that this creates an adoption barrier: with lean and javascript
+there there are two languages to learn, two build systems to learn.
+
+### Write state update in Lean
+
+It would be desirable if authors could write widgets and their state update in lean, and have this somehow execute in the browser.
+Within this space, there are various possibilities.
+
+  - Compile a special-purpose Lean-embedded DSL. <br>
+    **Con**: like writing javascript, user has to learn other language <br>
+    **Pro**: could produce idiomatic javascript
+  - Elaborate lean to Expr, and then custom compilation Expr to js. <br>
+    **Pro**: tree-shaking happens naturally. Idiomatic mapping of high-level operations to javascript operations. <br>
+    **Con**: Expr has tons of equality reasoning type of stuff (e.g. proof witnesses) in it that is proof-irrelevantly erased by IR time
+  - Compile lean to LLVM to wasm. (probably emscripten)
+  - Compile lean to C to wasm. (probably emscripten)
+  - Compile lean to IR to wasm directly.<br>
     Extra work here is: understanding wasm format, relearn how C compilation works but do it by hand
-  - …via compile lean to something earlier than IR, then compile to idiomatic javascript.
-  - …via compiling lean to IR to javascript
-    Analyze the IR of reasonably well-behaved pure functions and produce idiomatic state-update javascript functions.
-    Disadvantages: might require a lot of work. IR maybe doesn’t have enough type information.
-    Advantages: direct FFI arbitrary javascript. More inspectable/debuggable.
+  - Compile lean to something earlier than IR, then compile to idiomatic javascript.
+  - Compile lean to IR to javascript.<br>
+    Analyze the IR of reasonably well-behaved pure functions and produce idiomatic state-update javascript functions. <br>
+    **Con**: might require a lot of work. IR maybe doesn’t have enough type information. <br>
+    **Pro**: direct FFI arbitrary javascript. More inspectable/debuggable. <br>
     +/-: performance. Javascript slower than wasm for inner loop, but less overhead passing between js/dom manipulations and wasm.
 
+## Collaborative Editing
+
+In order for collaborative editing to work, we need some solution to reconcile divergent edits.
+The [YATA algorithm](https://www.researchgate.net/publication/310212186_Near_Real-Time_Peer-to-Peer_Shared_Editing_on_Extensible_Data_Types),
+as realized in the javascript library [Yjs](https://github.com/yjs/yjs), seems like a good choice in this space.
+
+**Pro**:
+
+- Mature project, has been in development for 11 years, with recent updates.
+- Supports session-bounded awareness data
+- Optimized for performance
+- Confirmed to work with monaco specifically
+- Underlying algorithm [https://github.com/iasakura/lean-yjs](has been recently verified in lean)
+- CDRT as opposed to OT means it is more 'local-first', users can edit during
+  server outages and have a good chance of reconciling edits afterwards.
+
+**Con**:
+
+- Still mostly in javascript, not typescript, though some api types available
+
+## Identity
+
+As a first pass, the workbench will rely on the GitHub OAuth Apps API
+for managing user identities. This requires the user to share their
+email address as provided to GitHub and no other permissions. Giving
+permissions to take actions on behalf of the user (e.g. making
+commits) is a separate, optional choice if the user wishes to use the
+github version control integration features of the workbench.
 
 # Evaluation
 
