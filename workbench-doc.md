@@ -42,7 +42,24 @@ features, and these features can be made portable between genres.
 
 ## Lean4Web ("Live-Lean")
 
-TODO: Discuss client-server architecture.
+[Lean4Web](https://github.com/leanprover-community/lean4web) is a web
+application that allows editing a single Lean file from in the browser
+and accessing the info-view for it. Its interface strongly resembles
+VSCode with the Lean4 extension installed, and supports most of the
+normal operations supported in that environment to the extent that
+they make sense, such as jump-to-definition, (with links to external
+documentation sites when the code is not part of the single file being
+edited) code completion, quick fixes, etc.
+
+An instance of Lean4web is hosted at
+[https://live.lean-lang.org/](https://live.lean-lang.org/).
+
+Lean4web uses a server-client architecture, in contrast to earlier web
+interfaces made for e.g. Lean3. The server process, which is
+responsible for actually running the lean binary and compiling and
+typechecking user code, is sandboxed using
+[Bubblewrap](https://github.com/containers/bubblewrap). The client
+relies on the monaco text editor component from vscode.
 
 ## Lean4VSCode
 
@@ -50,6 +67,10 @@ TODO: Discuss existing LSP extensions.
 [Marc explains a lot of useful details here](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/Lean.20.2B.20Zed.20integration/near/505671509).
 
 ## Natural Numbers Game
+
+TODO: Discuss game authoring language.
+
+TODO: Discuss ways in which the presentation is different from standard text-editor-plus-infoview display.
 
 TODO: Discuss client-server architecture.
 
@@ -215,18 +236,25 @@ to install and use Lean normally.
 
 It is a non-goal to run the entirety of the lean kernel, compiler,
 type-checker, Mathlib etc. inside the web browser. It is acceptable to
-maintain a client-server arrangement where the more memory and
-computation intensive parts of type-checking Lean take place on the
+maintain a client-server arrangement where the more memory- and
+computation-intensive parts of type-checking Lean take place on the
 server.
 
 It is a non-goal for the Lean FRO to maintain a single workbench
 server that is meant to accommodate all usage globally. The FRO may
 choose to maintain a server with a deliberately conservative set of
 expectations of usage. For example, the amount of compute or disk
-storage might be limited, or saved files, if any, might have a short
+storage might be limited, or saved files, if any, might have a limited
 lifetime before being garbage-collected. We expect institutional users
 to install and maintain their own copies of the service if they want
-a full-featured version of the workbench experience.
+the members of their institution to have a full-featured version of
+the workbench experience.
+
+Although it is desirable, all else equal, for the workbench to be as
+easy to use for as many users as possible, it is a non-goal for the
+workbench to work on literally every web browser: it is acceptable to
+make some compromises in browser coverage if browsers lack features
+necessary for other goals of the project to be achieved.
 
 # Data Design
 
@@ -237,18 +265,19 @@ a full-featured version of the workbench experience.
 
 # Architecture Design
 
-TODO: put a mermaid diagram here
+TODO: architecture diagram here
 
 ## Interface Organization
 
 A central decision point is whether to present to the user what is
 fundamentally "VSCode on the web" (similar to https://vscode.dev/ or
-https://github.dev/ ) or something else. This question does not
-address whether we reuse the monaco text editing component (which is
-discussed below) or whether we intend to reuse a substantial amount of
-functionality from the Lean VSCode plugin, LSP client, etc. (which we
-intend to do). It is concerned with the user interface affordances
-that are outside the scope of a single file, for example:
+https://github.dev/ or https://gitpod.io/) or something else. This
+question does not address whether we reuse the monaco text editing
+component (which is discussed below) or whether we intend to reuse a
+substantial amount of functionality from the Lean VSCode plugin, LSP
+client, etc. (which we intend to do). It is concerned with the user
+interface affordances that are outside the scope of a single file, for
+example:
 
 - file management: choosing files to edit, moving files around, modifying their attributes
 - selecting a project/workspace to work on
@@ -257,6 +286,7 @@ that are outside the scope of a single file, for example:
 ### The case for "Basically VSCode"
 
 - More reuse, less time spent coding up file browser widgets
+- Easier transfer of skills from workbench to local installation
 
 ### The case for Custom UX
 
@@ -266,6 +296,17 @@ that are outside the scope of a single file, for example:
 - More ability to design for domain-specific ways of focusing readers' attention.
   This is especially relevant for inexperienced readers whom we want to avoid
   overwhelming with advanced features.
+
+### Decision
+
+For the first stage of development, we intend to pursue a "Basically
+VSCode" interface. [Gitpod's opensourced version of their
+vscode-server](https://github.com/gitpod-io/openvscode-server) appears
+promising as a base for development. As the project evolves, we will
+be able to experiment with other UX experiences that are based on
+underlying lean code, but we consider it important to establish a
+working baseline system that allows authors to work on real Lean
+projects, and sticking to known mechanisms reduces development risk.
 
 ## Text Editing Component
 
