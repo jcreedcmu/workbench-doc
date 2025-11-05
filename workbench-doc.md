@@ -158,7 +158,13 @@ documents probably shouldn't be world-writable.
 
 ## Data Organization
 
-The workbench should support persistent storage of user content.
+The workbench should support persistent storage of user content. This
+includes lean files, as well as relevant metadata and user settings.
+For example, users may wish to save their progress through interactive
+games.
+
+The workbench should make it easy to backup all such persistent
+content.
 
 The workbench's conception of "what a Lean project is" should be as
 close as possible to what it is when someone uses Lean normally on
@@ -258,10 +264,32 @@ necessary for other goals of the project to be achieved.
 
 # Data Design
 
-## Document Structure
+## Per User Data
 
-- Notebook cells?
-- Verso document?
+For a given instance of the workbench, there is a set of users.
+Each user has data that they own. This includes a set of *projects*
+(see below) and other metadata.
+
+TODO: more details
+
+## Projects Structure
+
+Each project conceptually consists of a directory which may
+recursively contain other directories and files. The structure of
+these directories and files follows the same conventions and
+requirements of a lean project. For example, there must be a
+`lakefile.toml` or `lakefile.lean`, a `lean-toolchain` file, etc.
+There may be additional files in a project directory that contain
+per-project metadata.
+
+TODO: more details
+
+## Permissions
+
+Information about access control for a project can be stored as a
+`.json` file in the top-level directory.
+
+TODO: more details
 
 # Architecture Design
 
