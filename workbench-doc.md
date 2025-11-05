@@ -431,7 +431,14 @@ github version control integration features of the workbench.
 
 # Evaluation
 
+In this section we discuss how we measure the extent to which the project has made progress.
+
 ## Audience
+
+We can consider a spectrum of "power users" with more relevant
+experience and independence to a more "general audience" who will
+benefit from their needs being specifically accommodated.
+
 - Developer of verso who already know its internals intimately
 - Lean expert
 - Mathematician with some lean experience
@@ -440,22 +447,23 @@ github version control integration features of the workbench.
 - Undergrad student
 - High school student
 
-## Artifact
-- Something that looks like a paper without any real results
-- Something that looks like a paper with some stub results
-- Something that looks like a paper with some substantial results, maybe some sorrys
-- Something that looks like a polished, complete paper with a previously known result
-- Something that looks like a polished, complete paper with a new research result
+We are targetting, as a first priority, **mathematicians** or at least
+people interested in doing, teaching, or learning formalized mathematics. This is in contrast
+to prioritizing, e.g. functional programmers interested in learning about verification.
 
 ## Milestones
 
+These are drawn from the [original proposal
+document](https://docs.google.com/document/d/1VTcJsIgrp1R28HkFPJdyw7RaELwYFN2Ko3x990psCIk/edit?tab=t.0#heading=h.q6ejnzk07inl).
+
+- Ability to edit multiple-file Lean projects
+- Live collaborative editing
 - Github integration
 - AI interface
 - NNG ported
 - New games written
 - Usability study
 - Metrics dashboard
-- Live collaborative editing
 - Textbook/resources authored
-- Papers published
-- Adoption
+- Papers published written with workbench
+- Adoption by university courses
