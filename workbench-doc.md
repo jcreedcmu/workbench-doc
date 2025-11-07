@@ -457,27 +457,58 @@ permissions to take actions on behalf of the user (e.g. making
 commits) is a separate, optional choice if the user wishes to use the
 github version control integration features of the workbench.
 
-# Evaluation
+# User Stories
 
-In this section we discuss how we measure the extent to which the project has made progress.
+In this section we imagine some use-cases how the workbench could be used.
 
-## Audience
+## Researcher
 
-We can consider a spectrum of "power users" with more relevant
-experience and independence to a more "general audience" who will
-benefit from their needs being specifically accommodated.
+A person who wants to write a research paper for publication,
+including its formalization. They can, using the Workbench's online
+interface
 
-- Developer of verso who already know its internals intimately
-- Lean expert
-- Mathematician with some lean experience
-- Mathematician with no prior lean experience
-- Grad student
-- Undergrad student
-- High school student
+- Create an account on a Workbench instance
+- Create a new "research paper" project
+- Edit their paper as lean code and human-readable text
+- Preview it as rendered PDF
+- Send an invite link to collaborators, who can then view and (if they
+  also make an account) edit the same project
+- Export the paper as LaTeX and PDF, suitable for publication on the
+  ArXiv, or a journal or conference
 
-We are targetting, as a first priority, **mathematicians** or at least
-people interested in doing, teaching, or learning formalized mathematics. This is in contrast
-to prioritizing, e.g. functional programmers interested in learning about verification.
+## Professor
+
+A person who wants to teach mathematics, using Lean to make the
+relevant definitions and proofs formally verified. They can,
+using the Workbench's online interface
+
+- Create an account on a Workbench instance
+- Create a new "course" project
+- Create modules within the course that combine lean code and human-readable text
+- Create exercises that consist of lean files with sorrys to be filled in by students
+
+## Polymath
+
+The term 'polymath' is used in the sense of [Tim Gowers's
+Project](https://en.wikipedia.org/wiki/Polymath_Project). A person who
+wants to achieve a large-scale collaboration among many people doing
+mechanized mathematical work, many of whom may not know each other
+well. Any of them can:
+
+- Create an account on a Workbench instance
+- Navigate the blueprint of a particular project to find out what work needs to be done.
+- TODO: fill this idea out more? Is it really that distinct from "Researcher"?
+
+## Blogger
+
+A person who wants to publish many article-length narratives about formalized mathematics.
+They can
+
+- Create an account on a Workbench instance
+- Create a new "research paper" project
+- Compose their articles as lean code and human-readable text
+- Preview it as rendered HTML
+- Obtain a link to a rendered version of their post served by the Workbench instance
 
 ## Milestones
 
