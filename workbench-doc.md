@@ -63,16 +63,48 @@ relies on the monaco text editor component from vscode.
 
 ## Lean4VSCode
 
-TODO: Discuss existing LSP extensions.
-[Marc explains a lot of useful details here](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/Lean.20.2B.20Zed.20integration/near/505671509).
+The [existing vscode extension for lean4](https://github.com/leanprover/vscode-lean4)
+has extensive ide feature support, including
+- document highlights
+- hovers
+- folding ranges
+- semantic tokens
+- inlay hints
+- completions
+- diagnostics
+- signature help
+- code actions
+
+Moreover, it makes use of various lean-specific extensions to the LSP protocol.
+A significant example is that semantic highlighting is done incrementally rather than
+all at once, which is the only thing the standard LSP protocol supports. Incremental
+highlighting is important in practice for the user experience of editing Lean files
+in which the full computation can be expensive.
+[More details are explained here](https://leanprover.zulipchat.com/#narrow/channel/113488-general/topic/Lean.20.2B.20Zed.20integration/near/505671509).
 
 ## Natural Numbers Game
 
-TODO: Discuss game authoring language.
+The natural numbers game, and more generally current iteration of the
+[lean game server](https://adam.math.hhu.de/), presents an alternative
+interface for constructing lean proofs that is suitable for people
+learning about mechanized proofs for the first time, as well as people with
+some degree of familiarity with proof assistants who nonetheless want an introduction
+to tactic-based proving.
 
-TODO: Discuss ways in which the presentation is different from standard text-editor-plus-infoview display.
+The differences from the standard lean environment which have pedagogical value include:
+- explanatory narrative text to the learner is provided in a sidebar
+- hints can be provided that are conditioned on what steps the learner has already taken in the proof
+- specific proof goals are provided as exercises, and are partially ordered to ensure the learner first understands concepts that are prerequisites for other learning goals
+- the authoring of a proof is (by default) constrained to adding steps one after another to the growing script. A free-text-entry mode is also provided.
+- the tactics available are constrained to a limited "vocabulary" which expands as the game proceeds
 
-TODO: Discuss client-server architecture.
+Games are authored by writing lean code in a DSL that allows adding
+metadata for narrative text, custom learner-oriented tactic
+documentation, and intra-proof hints.
+
+Like lean4web, the lean game server does in fact rely on a server
+running the lean process. Communication between the client and the
+server is mediated to accomplish the interface differences described above.
 
 ## Widgets Framework
 
@@ -80,12 +112,22 @@ TODO: Discuss client-server architecture.
 
 ## Blueprint
 
-TODO: Discuss role of python scripts checking consistency.
+Patrick Massot's [blueprint tool](https://github.com/PatrickMassot/leanblueprint) allows
+writing a LaTeX document with annotations on theorems and definitions that specify
+- which lean identifiers they are intended to correspond to in a lean development
+- whether the statement and/or proof of an informal theorem is believed to have a complete,
+correct formalization on the lean side
+- which other theorems and/or definitions it depends on
+and will then generate html and pdf output and a dependency graph, decorated with the
+inferred status of various elements of the planned work. For example, it will
+communicate whether an theorem that hasn't been formalized yet is <i>ready</i> to be
+formalized, in the sense that all of the definitions and statements of lemmas it
+depends on have been formalized.
 
 ### Zhu's Blueprint Metaprogramming
 
 Thomas Zhu has a prototype of generating blueprints from annotations directly on lean
-code. It would be nice to fold this into verso, and/or have some first-class way of
+code. It would be useful to fold this into verso, and/or have some first-class way of
 viewing and navigating these online.
 
 https://github.com/hanwenzhu/blueprint-gen
@@ -209,7 +251,7 @@ artefacts, as PDF, HTML, or other formats as appropriate. We expect
 this to be done by relying on Verso.
 
 The workbench should provide rapid feedback for how documents will
-look. TODO: How rapid is rapid? For example,
+look. For example,
 [Typst](https://typst.app/play/) sets a very high bar for speed.
 
 Authors should be able to include non-textual elements inline in their documents.
