@@ -378,6 +378,12 @@ underlying lean code, but we consider it important to establish a
 working baseline system that allows authors to work on real Lean
 projects, and sticking to known mechanisms reduces development risk.
 
+Furthermore, the other UX experiences we plan to offer can benefit
+from this grounding in a basic and familiar mode of editing. If there
+are any gaps during early development of some new mode, as long as it
+is a "turn-over" experience of an underlying lean project, then we can
+always use the basic mode as a fallback for editing.
+
 ## Text Editing Component
 
 We discuss here decisions about what core text editing component we plan to rely on.
@@ -498,6 +504,74 @@ email address as provided to GitHub and no other permissions. Giving
 permissions to take actions on behalf of the user (e.g. making
 commits) is a separate, optional choice if the user wishes to use the
 github version control integration features of the workbench.
+
+## Lean Games
+
+We aim to make the next generation of pedagogical experiences for
+learning the Lean language, building on the success of the current
+Lean Game Server and its predecessors.
+
+First we mention the aspects of the system we intend to retain.
+
+- The architecture is still server-client. It is a non-goal to do run a lean process in the browser.
+- Lean game content is still structured as a simple, fixed-depth hierarchy of "worlds" and "levels".
+- Per-level game content still consists of progressively revealed,
+  narrative text, a single proof goal, hints, and specifying the "inventory" of allowed tactics.
+
+We have the following goals for improvments:
+
+### Workbench & Lean Ecosystem Integration
+
+- Previewing a game whose underlying source is edited in the workbench
+  should be an easy, one-click "turn-over" experience for the author.
+  It should be possible to simply give a link to someone else to allow
+  them to play the game.
+
+- Authors can write games as Verso documents.
+
+- Authors can easily convert existing games to this Verso format.
+
+### Legibility
+
+- We plan to push the capabilities of the game interface more in the direction of learners
+  that are less familiar with theorem proving. This means providing an experience that
+  deliberately restricts the available operations the player can perform with the aim
+  of making it easier to perceive what the correct operation is at any given time.
+
+- In practice we expect this to mean offering a "direct manipulation"-style interface,
+  taking influence from Sketch, Blockly, Actema, Paperproof, etc.
+
+### Transferrability
+
+- Despite the above goal, we wish to nonetheless not stray too far from the value of lean
+  games serving as an *onramp to proving and programming in Lean for real*. No matter
+  what drag-and-drop functionality is offered, it must produce (and must be judged valid
+  or invalid consistent with the production of) textual Lean proofs. This is "behind the scenes"
+  by default, but users absolutely should be able to inspect it and see how it reacts to the
+  operations they have become familiar with. This is analogous to the current Lean Game Server
+  offering "text" vs. "typewriter" mode.
+
+### Extensibility
+
+- It is a goal to be able to support appropriate interface affordances
+for arbitrary Lean tactics.
+
+- Specifically, incrementally drilling into expressions for targeted
+rewrites with something like `conv` should be possible, and the
+various choices should be directly visible as affordances to the user,
+without having to know ahead of time that, e.g. `lhs` is how they are
+meant to select the left side of an expression.
+
+- Similarly, we intend to support `calc` proofs.
+
+### Measurability
+
+- Progress through games should be stored server-side when users have accounts.
+
+- With users' consent, at least in the context of a controlled study,
+  the workbench should be able to collect metrics so that we can
+  measure the effectiveness of interventions and interface design
+  choices.
 
 # User Stories
 
