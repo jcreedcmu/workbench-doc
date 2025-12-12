@@ -33,3 +33,13 @@ jobs:
         name: workbench-doc.pdf
         path: workbench-doc.pdf
         retention-days: 90
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      if: github.ref == 'refs/heads/main'
+      with:
+        tag_name: latest
+        files: workbench-doc.pdf
+        body: "Workbench design doc"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
