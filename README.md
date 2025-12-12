@@ -7,4 +7,4 @@ make
 # open workbench-doc.html
 ```
 
-Github actions [builds and releases a PDF](releases/download/latest/workbench-doc.pdf).
+Github actions [https://github.com/jcreedcmu/workbench-doc/releases/download/latest/workbench-doc.pdf](builds and releases a PDF).
