@@ -351,56 +351,48 @@ Project metadata may include:
 ```mermaid
 flowchart TD
 
-%% === TOP LEVEL ===
-User[User]
+subgraph Client
 
-subgraph Client[Client]
-    UI[Workbench UI]
-    Monaco[Monaco Editor]
-    Collab[Yjs Collaboration]
-    Widgets[Widgets Framework]
-    VersoRender[Verso Renderer]
-    GameUI[Game UI]
+subgraph CoreEditor[Core Editor]
+   VSCode[VSCode-on-Web]
+end
+VSCode --> Monaco
+
+GameView[Game Interface]
+GameView --> CoreEditor
+
+Notebook[Notebook Interface]
+Notebook --> CoreEditor
+
+VersoPreview[Verso Preview]
+VersoPreview --> CoreEditor
+
+Monaco
+
 end
 
-subgraph Server[Server]
-    Auth[Identity Providers]
-    Storage[Project and User Data Store]
-    LeanProc[Sandboxed Lean Process]
-    Verso[Verso Document System]
-    Games[Lean Game Server]
+subgraph Server
+   ApiServer[API Server]
+   Auth
+   LeanServer[Lean Server]
+   MetadataStorage[(Metadata Storage)]
+   ProjectStorage[(Project Storage)]
 end
 
-subgraph Projects[Projects]
-    Files[Lean Files and Verso Docs]
+CoreEditor --> ApiServer
+
+
+ApiServer --> Auth
+ApiServer --> LeanServer
+ApiServer --> MetadataStorage
+ApiServer --> ProjectStorage
+
+subgraph ExternalServices[External Services]
+    Github
 end
 
-%% === CONNECTIONS ===
-User --> UI
+Auth <--> Github
 
-UI --> Monaco
-UI --> VersoRender
-UI --> Collab
-UI --> Widgets
-UI --> GameUI
-
-Monaco <--> LeanProc
-VersoRender <--> Verso
-GameUI <--> Games
-
-Collab <--> Server
-
-Server --> Auth
-Server --> Storage
-Server --> LeanProc
-Server --> Verso
-Server --> Games
-
-Storage --- Files
-UI --- Files
-Server --- Files
-
-Verso -. depends on .-> Widgets
 ```
 
 ## Interface Organization
