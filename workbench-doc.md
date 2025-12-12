@@ -126,13 +126,14 @@ depends on have been formalized.
 
 ### Zhu's Blueprint Metaprogramming
 
-Thomas Zhu has a prototype of generating blueprints from annotations directly on lean
-code. It would be useful to fold this into verso, and/or have some first-class way of
-viewing and navigating these online.
+Thomas Zhu has a prototype of generating blueprint LaTeX from
+annotations directly on lean code. It would be useful to fold this
+into verso, and/or have some first-class way of viewing and navigating
+these online.
 
-https://github.com/hanwenzhu/blueprint-gen
+https://github.com/hanwenzhu/LeanArchitect
 
-https://github.com/hanwenzhu/blueprint-gen-example
+https://github.com/hanwenzhu/LeanArchitect-example
 
 ## Visual Design
 
@@ -202,11 +203,8 @@ documents probably shouldn't be world-writable.
 
 The workbench should support persistent storage of user content. This
 includes lean files, as well as relevant metadata and user settings.
-For example, users may wish to save their progress through interactive
-games.
-
-The workbench should make it easy to backup all such persistent
-content.
+For example, the workbench should be able save progress through
+interactive games.
 
 The workbench's conception of "what a Lean project is" should be as
 close as possible to what it is when someone uses Lean normally on
@@ -229,7 +227,11 @@ this is through commandline tools, rather than through the web interface.
 
 ## Collaboration
 
-The workbench should support integration with version control.
+The workbench should support at least minimal integration with version
+control. It is a non-goal to support, say, the entire git feature set,
+but it should be possible to save the state of a project as a
+checkpoint, and to restore the state of a project to a previously
+existing checkpoint.
 
 The workbench should support multiple users being able to make changes
 to the same Lean project, including near-real-time editing of the same
@@ -240,9 +242,9 @@ The workbench should support communicating
 data: which collaborators are currently actively viewing the document,
 and which part of the document they are viewing or editing.
 
-The workbench should support exporting a project to a gzipped tar or
-zip archive. The workbench should support import of these archive
-formats, as well as git remotes.
+The workbench should support individual users exporting a project to a
+gzipped tar or zip archive. The workbench should support import of
+these archive formats, as well as git remotes.
 
 ## Document Authoring
 
@@ -251,8 +253,11 @@ artefacts, as PDF, HTML, or other formats as appropriate. We expect
 this to be done by relying on Verso.
 
 The workbench should provide rapid feedback for how documents will
-look. For example,
-[Typst](https://typst.app/play/) sets a very high bar for speed.
+look. For example, [Typst](https://typst.app/play/) sets a very high
+bar for speed, with updates happening keystroke by keystroke in tens
+of milliseconds. The workbench should be at least as responsive as
+[Overleaf](https://www.overleaf.com/), which is able to rerender
+documents in seconds.
 
 Authors should be able to include non-textual elements inline in their documents.
 Examples include but are not limited to:
@@ -269,7 +274,8 @@ Examples include but are not limited to:
 The workbench should prevent uncontrolled access to the underlying
 resources of the server. Because Lean can be used a general-purpose
 programming language, this requires sandboxing at the operating system
-level.
+level. We intend to follow the same design choices (i.e. using
+bubblewrap) as lean4web does.
 
 ## Mobile
 
@@ -309,29 +315,36 @@ necessary for other goals of the project to be achieved.
 ## Per User Data
 
 For a given instance of the workbench, there is a set of users.
-Each user has data that they own. This includes a set of *projects*
-(see below) and other metadata.
+Each user has data that they own. This includes
 
-TODO: more details
+- a set of *projects* owned by the user (see below)
+- the external OAuth account(s) the user is associated with
+- whether the user is an administrator or not
+- custom data managed by interactions with other projects. Examples of this include:
+  - progress data for interactive games
+  - cell state for documents presenting a notebook interface
 
-## Projects Structure
+##  Structure of Projects
 
 Each project conceptually consists of a directory which may
 recursively contain other directories and files. The structure of
 these directories and files follows the same conventions and
 requirements of a lean project. For example, there must be a
 `lakefile.toml` or `lakefile.lean`, a `lean-toolchain` file, etc.
-There may be additional files in a project directory that contain
-per-project metadata.
 
-TODO: more details
+Project metadata may include:
 
-## Permissions
-
-Information about access control for a project can be stored as a
-`.json` file in the top-level directory.
-
-TODO: more details
+- Permissions information, specifying which users are allowed to view,
+  edit, make administrative changes to the project.
+- What type of views the project supports. For example, a project
+  explicitly declares that it expects to be renderable as a document,
+  or viewable as an interactive game, or interacted with as a
+  notebook. (Arguably this information will likely overlap with
+  information specified in a lakefile.toml/lakefile.lean, but the
+  intention should be exprsesed in an explicit and trivially parsed
+  form, to avoid making parsing .toml/.lean files a prerequisite for
+  making decisions about how to present such projects in the
+  interface)
 
 # Architecture Design
 
@@ -632,12 +645,14 @@ These are drawn from the [original proposal
 document](https://docs.google.com/document/d/1VTcJsIgrp1R28HkFPJdyw7RaELwYFN2Ko3x990psCIk/edit?tab=t.0#heading=h.q6ejnzk07inl).
 
 - Ability to edit multiple-file Lean projects
-- Live collaborative editing
+- Collaborative editing
 - Github integration
+
 - AI interface
 - NNG ported
 - New games written
 - Usability study
+
 - Metrics dashboard
 - Textbook/resources authored
 - Papers published written with workbench
