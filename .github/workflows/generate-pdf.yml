@@ -20,6 +20,9 @@ jobs:
       with:
         node-version: '20'
 
+    - name: Install puppeteer for mermaid
+      run: npx puppeteer browsers install chrome-headless-shell
+
     - name: Install Mermaid CLI
       run: npm install -g @mermaid-js/mermaid-cli
 
