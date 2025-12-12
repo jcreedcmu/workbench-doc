@@ -1,0 +1,49 @@
+name: Test Mermaid
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-mermaid:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser
+
+    - name: Install Mermaid CLI
+      run: npm install -g @mermaid-js/mermaid-cli
+      env:
+        PUPPETEER_SKIP_CHROMIUM_DOWNLOAD: 'true'
+
+    - name: Create test Mermaid diagram
+      run: |
+        cat > test.mmd << 'EOF'
+        graph TD
+          A[Start] --> B[End]
+        EOF
+
+    - name: Generate diagram
+      run: mmdc -i test.mmd -o test.png -s 3
+      env:
+        PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+
+    - name: Upload test diagram
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-diagram
+        path: test.png
