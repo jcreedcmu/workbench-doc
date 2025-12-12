@@ -348,7 +348,60 @@ Project metadata may include:
 
 # Architecture Design
 
-TODO: architecture diagram here
+```mermaid
+flowchart TD
+
+%% === TOP LEVEL ===
+User[User]
+
+subgraph Client[Client]
+    UI[Workbench UI]
+    Monaco[Monaco Editor]
+    Collab[Yjs Collaboration]
+    Widgets[Widgets Framework]
+    VersoRender[Verso Renderer]
+    GameUI[Game UI]
+end
+
+subgraph Server[Server]
+    Auth[Identity Providers]
+    Storage[Project and User Data Store]
+    LeanProc[Sandboxed Lean Process]
+    Verso[Verso Document System]
+    Games[Lean Game Server]
+end
+
+subgraph Projects[Projects]
+    Files[Lean Files and Verso Docs]
+end
+
+%% === CONNECTIONS ===
+User --> UI
+
+UI --> Monaco
+UI --> VersoRender
+UI --> Collab
+UI --> Widgets
+UI --> GameUI
+
+Monaco <--> LeanProc
+VersoRender <--> Verso
+GameUI <--> Games
+
+Collab <--> Server
+
+Server --> Auth
+Server --> Storage
+Server --> LeanProc
+Server --> Verso
+Server --> Games
+
+Storage --- Files
+UI --- Files
+Server --- Files
+
+Verso -. depends on .-> Widgets
+```
 
 ## Interface Organization
 
