@@ -540,7 +540,9 @@ We have the following goals for improvments:
   It should be possible to simply give a link to someone else to allow
   them to play the game.
 
-- Authors can write games as Verso documents.
+- Authors can write games as Verso documents, so that whenever their
+  narrative text refers to Lean code, it can be guaranteed to be
+  correct and have useful hover affordances, syntax highlighting, etc.
 
 - Authors can easily convert existing games to this Verso format.
 
@@ -551,8 +553,19 @@ We have the following goals for improvments:
   deliberately restricts the available operations the player can perform with the aim
   of making it easier to perceive what the correct operation is at any given time.
 
-- In practice we expect this to mean offering a "direct manipulation"-style interface,
-  taking influence from Sketch, Blockly, Actema, Paperproof, etc.
+- In practice we expect this to mean introducing some elements of "direct manipulation" in the interface.
+  When sensible, we intend to replace text entry with "blocks from a toolbox" or drop-down menus, and
+  to reduce the total amount of cognitive and interactional distance between the user formulating
+  a goal and achieving it.
+
+- We expect to still strongly limit the places where the user extends
+  the proof under construction.
+
+- We take influence from Sketch, Blockly, Actema, Paperproof, TIPM, etc.
+
+- It is a non-goal to completely eliminate text entry, specifically
+  for term construction at data types.
+
 
 ### Transferrability
 
@@ -593,7 +606,7 @@ In this section we imagine some use-cases how the workbench could be used.
 ## Researcher
 
 A person who wants to write a research paper for publication,
-including its formalization. They can, using the Workbench's online
+whose contents are fully formalized in Lean. They can, using the Workbench's online
 interface
 
 - Create an account on a Workbench instance
@@ -625,8 +638,10 @@ mechanized mathematical work, many of whom may not know each other
 well. Any of them can:
 
 - Create an account on a Workbench instance
-- Navigate the blueprint of a particular project to find out what work needs to be done.
-- TODO: fill this idea out more? Is it really that distinct from "Researcher"?
+- Explore the blueprint of a particular project to find out what work needs to be done.
+- Easily submit proposed limited-scope incremental changes to the
+  overall proof, e.g. a change that fills in one sorry, which become
+  github PRs that can be reviewed by organizers of the project
 
 ## Blogger
 
@@ -644,15 +659,20 @@ They can
 These are drawn from the [original proposal
 document](https://docs.google.com/document/d/1VTcJsIgrp1R28HkFPJdyw7RaELwYFN2Ko3x990psCIk/edit?tab=t.0#heading=h.q6ejnzk07inl).
 
+Our current estimates are, referring to original milestones,
+
+End of year 1 (i.e. by summer 2026)
 - Ability to edit multiple-file Lean projects
 - Collaborative editing
 - Github integration
 
+End of year 2 (i.e. by summer 2027)
 - AI interface
 - NNG ported
 - New games written
 - Usability study
 
+End of year 3 (i.e. by summer 2027)
 - Metrics dashboard
 - Textbook/resources authored
 - Papers published written with workbench
