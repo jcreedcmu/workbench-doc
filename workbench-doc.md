@@ -717,7 +717,7 @@ End of year 2 (i.e. by summer 2027)
 - New games written
 - Usability study
 
-End of year 3 (i.e. by summer 2027)
+End of year 3 (i.e. by summer 2028)
 - Metrics dashboard
 - Textbook/resources authored
 - Papers published written with workbench
